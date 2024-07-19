@@ -11,9 +11,19 @@ public class MainController {
         return "Hello, world!";
     }
 
+    @GetMapping("/home")
+    public String home() {
+        return "Hello, world!, home";
+    }
+
     @GetMapping("/public")
     public String publicEndpoint() {
         return "Everyone can see this";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
 }
