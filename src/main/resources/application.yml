@@ -7,7 +7,6 @@ spring:
     username: ssafy
     password: ssafy
 
-
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     database: mysql
@@ -17,6 +16,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+
 
 logging:
   level:
@@ -28,3 +28,19 @@ jwt:
   #echo 'silvernine-tech-spring-boot-jwt-tutorial-secret-silvernine-tech-spring-boot-jwt-tutorial-secret'|base64
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
+
+# Swagger
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    operations-sorter: alpha # alpha(알파벳 오름차순), method(HTTP메소드순)
+    tags-sorter: alpha # 태그 정렬 기준
+#    path: /swagger # html 문서 접속 경로
+    disable-swagger-default-url: true
+    doc-expansion: none # tag, operation 펼치는 방식
+  paths-to-match:
+    - /**
