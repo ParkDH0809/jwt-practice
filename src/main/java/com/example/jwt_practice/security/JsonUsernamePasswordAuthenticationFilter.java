@@ -64,7 +64,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 
         setDetails(request, authRequest);
-        System.out.println("왜 안돼?");
         return authenticationProvider.authenticate(authRequest);
     }
 

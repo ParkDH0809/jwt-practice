@@ -28,7 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
     private final LoginSuccessHandler customLoginSuccessHandler;
     private final ObjectMapper objectMapper;
     private final UserDetailsService loginService;
@@ -63,11 +62,6 @@ public class SecurityConfig {
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
         return jsonUsernamePasswordAuthenticationFilter;
     }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager() throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager() {

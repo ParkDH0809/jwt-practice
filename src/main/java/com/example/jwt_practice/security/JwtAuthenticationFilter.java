@@ -66,5 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 권한 부여
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
+
+        System.out.println("token 확인 완료");
     }
 }

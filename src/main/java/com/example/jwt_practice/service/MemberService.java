@@ -24,17 +24,6 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-//    public String loginMember(LoginRequestDto loginRequestDto) {
-//        String memberEmail = loginRequestDto.getEmail();
-//
-////        Authentication authentication = authenticationManager
-////                .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
-//
-//        // SecurityContextHolder.getContext().setAuthentication(authentication);
-//        System.out.println("생성한 JWT" + JwtUtil.createJwt(loginRequestDto.getEmail()));
-//        return JwtUtil.createJwt(memberEmail);
-//    }
-
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("not found loginId: " + email));

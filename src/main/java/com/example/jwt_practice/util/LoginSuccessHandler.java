@@ -16,15 +16,9 @@ import java.io.IOException;
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper objectMapper;
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        String accessToken = JwtUtil.createJwt(authentication.getName());
-
-        System.out.println("login 성공");
-
-        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
+                                        Authentication authentication) {
+        response.setHeader(HttpHeaders.AUTHORIZATION, JwtUtil.createJwt(authentication.getName()));
     }
 }

@@ -17,14 +17,12 @@ public class JwtUtil {
 
     public static String createJwt(String userName){
         long expiredMs = 1000 * 60 * 60L;
-        String secretKey = "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest";
 
-        System.out.println("JWT 생성");
         return Jwts.builder()
                 .claim("userName", userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, signatureKey)
                 .compact();
     }
 
