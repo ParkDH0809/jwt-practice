@@ -1,8 +1,8 @@
 package com.example.jwt_practice.service;
 
-import com.example.jwt_practice.repository.UserRepository;
-import com.example.jwt_practice.user.CustomUserDetails;
-import com.example.jwt_practice.user.UserEntity;
+import com.example.jwt_practice.repository.MemberRepository;
+import com.example.jwt_practice.entity.Member;
+import com.example.jwt_practice.entity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userData = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("not found loginId: " + username));
-
-        return new CustomUserDetails(userData);
+    @Override
+    public UserDetails loadUserByUsername(String memberEmail) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("not found loginId: " + memberEmail));
+        return new UserDetailsImpl(member);
     }
 
 }
