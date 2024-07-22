@@ -3,6 +3,7 @@ package com.example.jwt_practice.config;
 import com.example.jwt_practice.security.JsonUsernamePasswordAuthenticationFilter;
 import com.example.jwt_practice.security.JwtAuthenticationFilter;
 import com.example.jwt_practice.service.MemberService;
+import com.example.jwt_practice.service.UserDetailsServiceImpl;
 import com.example.jwt_practice.util.LoginFailureHandler;
 import com.example.jwt_practice.util.LoginSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,13 +31,14 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler customLoginSuccessHandler;
     private final ObjectMapper objectMapper;
-    private final UserDetailsService loginService;
+//    private final UserDetailsService loginService;
+    private final UserDetailsServiceImpl userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
+    private final MemberService memberService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, MemberService memberService) throws Exception {
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -49,9 +51,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/login", "/join", "/").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(memberService), UsernamePasswordAuthenticationFilter.class);
-
+                .addFilterBefore(new JwtAuthenticationFilter(memberService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -66,9 +67,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(loginService);
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(new PasswordEncoderConfig().passwordEncoder());
-
         return new ProviderManager(provider);
     }
 

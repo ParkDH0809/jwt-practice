@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-
     @Autowired
     private MemberRepository memberRepository;
 

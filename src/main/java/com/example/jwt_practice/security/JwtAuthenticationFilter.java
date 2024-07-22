@@ -45,11 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 전송받은 값에서 'Bearer ' 뒷부분(Jwt Token) 추출
         String token = authorizationHeader.split(" ")[1];
 
-//        // 전송받은 Jwt Token이 만료되었으면 => 다음 필터 진행(인증 X)
-//        if(JwtUtil.isExpired(token, secretKey)) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
+        // 전송받은 Jwt Token이 만료되었으면 => 다음 필터 진행(인증 X)
+        if(JwtUtil.isExpired(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // Jwt Token에서 loginId 추출
         String loginEmail = JwtUtil.getLoginEmail(token);
@@ -62,11 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 loginMember.getEmail(), loginMember.getPassword(), List.of(new SimpleGrantedAuthority(loginMember.getRole())));
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-
         // 권한 부여
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
-
-        System.out.println("token 확인 완료");
     }
+
 }

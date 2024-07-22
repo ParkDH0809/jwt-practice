@@ -1,10 +1,7 @@
 package com.example.jwt_practice.controller;
 
-import com.example.jwt_practice.dto.LoginRequestDto;
-import com.example.jwt_practice.dto.LoginResponseDto;
 import com.example.jwt_practice.entity.Member;
 import com.example.jwt_practice.service.MemberService;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

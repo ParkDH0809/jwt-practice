@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@ToString
 public class Member {
 
     @Id @GeneratedValue
