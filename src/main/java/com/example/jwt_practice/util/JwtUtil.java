@@ -18,25 +18,40 @@ public class JwtUtil {
     private String issuer;
     @Value("${jwt.token.secret}")
     private String secretKey;
-    @Value("${jwt.token.expired-time}")
-    private long expiredTime;
+    @Value("${jwt.token.access-expired-time}")
+    private long accessExpiredTime;
+    @Value("${jwt.token.refresh-expired-time}")
+    private long refreshExpiredTime;
+
 
     private static SecretKey key;
     private static String ISSUER;
-    private static long EXPIRED_TIME;
+    private static long ACCESS_EXPIRED_TIME;
+    private static long REFRESH_EXPIRED_TIME;
 
     @PostConstruct
     public void init() {
         ISSUER = this.issuer;
-        EXPIRED_TIME = this.expiredTime;
+        ACCESS_EXPIRED_TIME = this.accessExpiredTime;
+        REFRESH_EXPIRED_TIME = this.refreshExpiredTime;
         key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    public String createJwt(String userName){
+    public String createAccessToken(String userName){
         return Jwts.builder()
                 .issuer(ISSUER)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRED_TIME))
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRED_TIME))
+                .claim("memberEmail", userName)
+                .signWith(key)
+                .compact();
+    }
+
+    public String createRefreshToken(String userName){
+        return Jwts.builder()
+                .issuer(ISSUER)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRED_TIME))
                 .claim("memberEmail", userName)
                 .signWith(key)
                 .compact();
@@ -47,7 +62,7 @@ public class JwtUtil {
         return decodeJwt(token).get("memberEmail").toString();
     }
 
-    // 밝급된 Token이 만료 시간이 지났는지 체크]
+    // 발급된 Token이 만료 시간이 지났는지 체크]
     public static boolean isExpired(String token) {
         Date expiredDate = decodeJwt(token).getExpiration();
         // Token의 만료 날짜가 지금보다 이전인지 check

@@ -1,7 +1,6 @@
 package com.example.jwt_practice.service;
 
 import com.example.jwt_practice.repository.MemberRepository;
-import com.example.jwt_practice.entity.Member;
 import com.example.jwt_practice.entity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

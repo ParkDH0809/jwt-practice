@@ -70,4 +70,5 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
         authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
+
 }

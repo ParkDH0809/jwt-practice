@@ -31,11 +31,9 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler customLoginSuccessHandler;
     private final ObjectMapper objectMapper;
-//    private final UserDetailsService loginService;
     private final UserDetailsServiceImpl userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
-    private final MemberService memberService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, MemberService memberService) throws Exception {
