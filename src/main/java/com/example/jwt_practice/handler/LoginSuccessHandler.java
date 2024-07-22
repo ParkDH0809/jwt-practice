@@ -1,7 +1,8 @@
-package com.example.jwt_practice.util;
+package com.example.jwt_practice.handler;
 
 import com.example.jwt_practice.dto.LoginResponseDto;
 import com.example.jwt_practice.entity.RefreshToken;
+import com.example.jwt_practice.jwt.JwtUtil;
 import com.example.jwt_practice.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +22,8 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private static final String JTW_PREFIX = "Bearer ";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final JwtUtil jwtUtil;
 
     @Autowired
     private RefreshTokenService refreshTokenService;
@@ -33,8 +32,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
-        String accessToken = JTW_PREFIX + jwtUtil.createAccessToken(authentication.getName());
-        String refreshToken = JTW_PREFIX + jwtUtil.createRefreshToken(authentication.getName());
+        String accessToken = JwtUtil.createAccessToken(authentication.getName());
+        String refreshToken = JwtUtil.createRefreshToken(authentication.getName());
 
         LoginResponseDto loginResponseDto = new LoginResponseDto(accessToken, refreshToken);
 

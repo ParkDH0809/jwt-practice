@@ -3,6 +3,7 @@ package com.example.jwt_practice.controller;
 import com.example.jwt_practice.entity.Member;
 import com.example.jwt_practice.service.MemberService;
 import com.example.jwt_practice.service.RefreshTokenService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,11 @@ public class MainController {
 
     @PostMapping("/refresh")
     public String refresh(@RequestHeader("Authorization") String refreshToken) {
-        refreshTokenService.findRefreshToken(refreshToken);
+        if (refreshTokenService.findRefreshToken(refreshToken)) {
+
+            System.out.println("토큰 정상 확인 완료");
+            return refreshTokenService.createAccessToken(refreshTokenService.getMemberEmail(refreshToken));
+        }
         return "refresh";
     }
 

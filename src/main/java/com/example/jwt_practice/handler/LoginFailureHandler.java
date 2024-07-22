@@ -1,4 +1,4 @@
-package com.example.jwt_practice.util;
+package com.example.jwt_practice.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

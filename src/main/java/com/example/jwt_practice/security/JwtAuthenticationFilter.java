@@ -2,7 +2,7 @@ package com.example.jwt_practice.security;
 
 import com.example.jwt_practice.entity.Member;
 import com.example.jwt_practice.service.MemberService;
-import com.example.jwt_practice.util.JwtUtil;
+import com.example.jwt_practice.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,18 +43,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 전송받은 값에서 'Bearer ' 뒷부분(Jwt Token) 추출
-        String token = authorizationHeader.split(" ")[1];
+        String token = JwtUtil.removeBearerPrefix(authorizationHeader);
         // 전송받은 Jwt Token이 만료되었으면 => 다음 필터 진행(인증 X)
         if(JwtUtil.isExpired(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Jwt Token에서 loginId 추출
-        String loginEmail = JwtUtil.getLoginEmail(token);
-
         // 추출한 loginId로 User 찾아오기
-        Member loginMember = memberService.getMemberByEmail(loginEmail);
+        Member loginMember = memberService.getMemberByEmail(JwtUtil.getLoginEmail(token));
 
         // loginUser 정보로 UsernamePasswordAuthenticationToken 발급
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

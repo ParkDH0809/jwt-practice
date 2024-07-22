@@ -1,4 +1,4 @@
-package com.example.jwt_practice.util;
+package com.example.jwt_practice.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +14,8 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
+    private static final String JTW_PREFIX = "Bearer ";
+
     @Value("${spring.application.name}")
     private String issuer;
     @Value("${jwt.token.secret}")
@@ -23,8 +25,7 @@ public class JwtUtil {
     @Value("${jwt.token.refresh-expired-time}")
     private long refreshExpiredTime;
 
-
-    private static SecretKey key;
+    private static SecretKey KEY;
     private static String ISSUER;
     private static long ACCESS_EXPIRED_TIME;
     private static long REFRESH_EXPIRED_TIME;
@@ -34,26 +35,26 @@ public class JwtUtil {
         ISSUER = this.issuer;
         ACCESS_EXPIRED_TIME = this.accessExpiredTime;
         REFRESH_EXPIRED_TIME = this.refreshExpiredTime;
-        key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        KEY = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
-    public String createAccessToken(String userName){
-        return Jwts.builder()
+    public static String createAccessToken(String userName){
+        return JTW_PREFIX + Jwts.builder()
                 .issuer(ISSUER)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRED_TIME))
                 .claim("memberEmail", userName)
-                .signWith(key)
+                .signWith(KEY)
                 .compact();
     }
 
-    public String createRefreshToken(String userName){
-        return Jwts.builder()
+    public static String createRefreshToken(String userName){
+        return JTW_PREFIX + Jwts.builder()
                 .issuer(ISSUER)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRED_TIME))
                 .claim("memberEmail", userName)
-                .signWith(key)
+                .signWith(KEY)
                 .compact();
     }
 
@@ -71,10 +72,14 @@ public class JwtUtil {
 
     public static Claims decodeJwt(String token) {
         return Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(KEY)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public static String removeBearerPrefix(String token) {
+        return token.split(" ")[1];
     }
 
 }
