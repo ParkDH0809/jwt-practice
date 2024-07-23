@@ -29,7 +29,6 @@ public class RefreshTokenService {
             System.out.println("refreshToken not found");
             return false;
         }
-
         return true;
     }
 

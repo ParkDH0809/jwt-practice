@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -17,11 +20,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
+    private final StringRedisTemplate redisTemplate;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -37,8 +42,16 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         LoginResponseDto loginResponseDto = new LoginResponseDto(accessToken, refreshToken);
 
-        RefreshToken refreshTokenEntity = new RefreshToken(refreshToken, authentication.getName());
-        refreshTokenService.addRefreshToken(refreshTokenEntity);
+//        RefreshToken refreshTokenEntity = new RefreshToken(refreshToken, authentication.getName());
+//        refreshTokenService.addRefreshToken(refreshTokenEntity);
+
+        // redis에 저장
+        redisTemplate.opsForValue().set(
+                authentication.getName(),
+                refreshToken,
+                JwtUtil.getExpiredTime( JwtUtil.removeBearerPrefix(refreshToken)),
+                TimeUnit.MILLISECONDS
+        );
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

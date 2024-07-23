@@ -4,12 +4,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtil {
@@ -63,6 +65,9 @@ public class JwtUtil {
         return decodeJwt(token).get("memberEmail").toString();
     }
 
+    public static Long getExpiredTime(String token) {
+        return decodeJwt(token).getExpiration().getTime();
+    }
     // 발급된 Token이 만료 시간이 지났는지 체크]
     public static boolean isExpired(String token) {
         Date expiredDate = decodeJwt(token).getExpiration();
